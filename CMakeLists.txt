@@ -19,7 +19,9 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(raylib)
 
-add_executable(RayLibTest_Sept24 main.cpp)
+add_executable(RayLibTest_Sept24 main.cpp
+        Maze.cpp
+        Maze.h)
 
 target_link_libraries(
         RayLibTest_Sept24 #target
