@@ -16,36 +16,15 @@ Maze::Maze()
         mazeData.at(i).resize(NUMBER_OF_ROWS);
     }
 
-    randomlyFillMazeWithWalls();
+    randomlyFillMazeWithWalls(); //here I come to save the day! (Mighty Mouse)
 
     //put START position at top left:
     mazeData[0][0] = 'S'; //in mazeData[x][y], is x the row and y the column? Or vice versa?
 
     //put the end at the bottom right
-    mazeData[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 1] = 'F';
+    mazeData[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 1] = 'G'; //G as in "Goal"
 
-    for (int row = 0; row < NUMBER_OF_ROWS; ++row)
-    {
-        for (int col = 0; col < NUMBER_OF_COLUMNS; ++col)
-        {
-            if (mazeData[row][col] == 0)
-            {
-                // int a = 123;
-                mazeData[row][col] = '_';
-            }
-        }
-    }
-
-
-    // mazeData[0][1] = 'X';
-    // mazeData[0][2] = 'Y';
-    // mazeData[0][3] = 'Z';
-
-
-
-
-
-    // maze.resize()
+    fillUpTheEmptySpots();
 }
 
 void Maze::print() const
@@ -54,35 +33,54 @@ void Maze::print() const
     {
         for (const auto& character : row)
         {
-            std::cout << character << " "; //setwidth might be "mandatory" for making the maze "pretty"
+            if (character == 'S') //make it red (make it OBVIOUS) -> C as in "current pos"
+            {
+                makeTextRed();
+            }
+
+            else
+            {
+                resetTextColor();
+            }
+
+            std::cout << character << " "; //setwidth might be "mandatory" for making the maze "pretty
         }
-        std::cout << "\n";//move to the next row in the maze
+        std::cout << std::endl;//move to the next row in the maze
     }
 }
 
 void Maze::solveMaze()
 {
-    // std::pair<int, int> pairExample = {11, 232};
-    //
-    // cout << pairExample.first
-
+    //step 1 from pseudocode for solving maze screenshot
     std::stack<std::pair<int, int>> stackOfCoordinates;
 
     std::pair<int, int> startingCoordinates = {0, 0};
     stackOfCoordinates.push(startingCoordinates);
 
-    mazeData[startingCoordinates.first][startingCoordinates.second] = 'V';
+    //step 2 (mark start pos. as visited)
+    mazeData[startingCoordinates.first][startingCoordinates.second]
+        = 'V';
 
+    std::pair<int, int> goalCoordinates =
+    {
+        NUMBER_OF_ROWS - 1, NUMBER_OF_COLUMNS - 1
+    };
+
+
+    //step 3
     while (!stackOfCoordinates.empty())
     {
-        auto topItem = stackOfCoordinates.top();
+        std::pair<int,int> currentCoordinates = stackOfCoordinates.top(); //step 3a
 
-        char mazeContentsAtTopCoordinate =
-            mazeData[topItem.first][topItem.second];
+        if (currentCoordinates == goalCoordinates) //step 3b
+        {
+            std::cout << std::endl << "Solved the maze" << std::endl;
+            break;
+        }
 
-        int a = 123;
+        std::pair<int, int> unvisitedNeighborCoordinates = findAnUnvisitedNeighbor(currentCoordinates);
 
-        //if (topItem == )
+
     }
     
 
@@ -101,4 +99,34 @@ void Maze::randomlyFillMazeWithWalls()
 
         mazeData[randomRow][randomCol] = 'W';
     }
+}
+
+void Maze::fillUpTheEmptySpots()
+{
+    for (int row = 0; row < NUMBER_OF_ROWS; ++row)
+    {
+        for (int col = 0; col < NUMBER_OF_COLUMNS; ++col)
+        {
+            if (mazeData[row][col] == 0)
+            {
+                // int a = 123;
+                mazeData[row][col] = '_';
+            }
+        }
+    }
+}
+
+void Maze::makeTextRed() const
+{
+    std::cout << "\033[31m";
+}
+
+void Maze::resetTextColor() const
+{
+    std::cout << "\033[0m";
+}
+
+std::pair<int, int> Maze::findAnUnvisitedNeighbor(const std::pair<int, int> &currentPosition)
+{
+
 }

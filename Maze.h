@@ -6,6 +6,11 @@
 #define RAYLIBTEST_SEPT24_MAZE_H
 #include <vector>
 
+// enum MazeSymbols
+// {
+//     WALL = 'W'
+//     EMPTY_SPOT = '_'
+// };
 
 class Maze
 {
@@ -14,6 +19,9 @@ private:
     static constexpr int NUMBER_OF_COLUMNS = 10;
     static constexpr int NUMBER_OF_WALLS = 30;  //this number should VARY with numberOfRows * numberOfCols
 
+    static constexpr char emptySpot = '_';
+
+    //the initial dims: 0 x 0
     std::vector<std::vector<char>> mazeData; //what is the default initialized value for a char? Is it ' '?
 
 public:
@@ -28,6 +36,14 @@ public:
 
 private:
     void randomlyFillMazeWithWalls();
+    void fillUpTheEmptySpots();
+
+    void makeTextRed() const; //const because this method won't modify the state of the maze
+    void resetTextColor() const;
+
+    ///@brief returns the coordinates of the (first-encountered) neighbor<br>
+    ///returns {-1, -1} if an unvisited, "nonwall" neighbor does NOT exist
+    std::pair<int, int> findAnUnvisitedNeighbor(const std::pair<int, int>& currentPosition);
 };
 
 
