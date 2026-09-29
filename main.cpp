@@ -11,19 +11,23 @@ int main()
 
     maze.print();
 
+    maze.solveMaze();
+
+
     // "\n" v endl
 
-    // InitWindow(600, 400, "Window title");
-    //
-    // while (!WindowShouldClose())
-    // {
-    //     BeginDrawing();
-    //     ClearBackground(RAYWHITE);
-    //     DrawText("Hello window", 100, 100, 200, LIGHTGRAY);
-    //     EndDrawing();
-    // }
-    //
-    // CloseWindow();
+    InitWindow(1000, 700, "Window title");
+
+    while (!WindowShouldClose()) //has the user clicked x yet?
+    {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        DrawText("C", 100, 100, 200, LIGHTGRAY);
+        DrawRectangle(0, 0, 100, 100, GREEN);
+        EndDrawing();
+    }
+
+    CloseWindow();
     //
     // std::cout << "Hello, World!" << std::endl;
     // return 0;

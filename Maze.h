@@ -23,7 +23,7 @@ public:
 
     void print() const;
 
-
+    ///@brief AKA: "traverse" maze (traversal algos are fascinating)
     void solveMaze();
 
 private:

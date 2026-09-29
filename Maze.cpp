@@ -41,7 +41,7 @@ Maze::Maze()
     // mazeData[0][2] = 'Y';
     // mazeData[0][3] = 'Z';
 
-    int a = 123;
+
 
 
 
@@ -68,6 +68,22 @@ void Maze::solveMaze()
 
     std::stack<std::pair<int, int>> stackOfCoordinates;
 
+    std::pair<int, int> startingCoordinates = {0, 0};
+    stackOfCoordinates.push(startingCoordinates);
+
+    mazeData[startingCoordinates.first][startingCoordinates.second] = 'V';
+
+    while (!stackOfCoordinates.empty())
+    {
+        auto topItem = stackOfCoordinates.top();
+
+        char mazeContentsAtTopCoordinate =
+            mazeData[topItem.first][topItem.second];
+
+        int a = 123;
+
+        //if (topItem == )
+    }
     
 
 }
