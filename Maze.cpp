@@ -16,7 +16,18 @@ Maze::Maze()
         mazeData.at(i).resize(NUMBER_OF_ROWS);
     }
 
-    randomlyFillMazeWithWalls(); //here I come to save the day! (Mighty Mouse)
+    //randomlyFillMazeWithWalls(); //here I come to save the day! (Mighty Mouse)
+    //hard-coded walls so that we're looking at the same maze during testing
+    mazeData[0][2] = 'W';
+    mazeData[0][6] = 'W';
+    mazeData[0][8] = 'W';
+    mazeData[1][9] = 'W';
+    mazeData[1][2] = 'W';
+    mazeData[1][5] = 'W';
+    mazeData[4][4] = 'W';
+    mazeData[4][5] = 'W';
+    mazeData[5][6] = 'W';
+    mazeData[7][8] = 'W';
 
     //put START position at top left:
     mazeData[0][0] = 'S'; //in mazeData[x][y], is x the row and y the column? Or vice versa?
@@ -33,7 +44,7 @@ void Maze::print() const
     {
         for (const auto& character : row)
         {
-            if (character == 'S') //make it red (make it OBVIOUS) -> C as in "current pos"
+            if (character == 'C') //make it red (make it OBVIOUS) -> C as in "current pos"
             {
                 makeTextRed();
             }
@@ -72,6 +83,8 @@ void Maze::solveMaze()
     };
 
     //step 3
+    auto outOfBoundsCoordinates = std::pair<int, int>(-1, -1);
+
     while (!stackOfCoordinates.empty())
     {
         std::pair<int,int> currentCoordinates = stackOfCoordinates.top(); //step 3a
@@ -86,17 +99,16 @@ void Maze::solveMaze()
         std::pair<int, int> unvisitedNeighborCoordinates
             = findAnUnvisitedNeighbor(currentCoordinates);
 
-        //auto thing = std::pair<int, int>(-1, -1);
-
-        if (unvisitedNeighborCoordinates != std::pair<int, int>(-1, -1)) //constructor for pair that makes {-1, -1}
+        //step 3d
+        if (unvisitedNeighborCoordinates != outOfBoundsCoordinates) //constructor for pair that makes {-1, -1}
         {
             mazeData[unvisitedNeighborCoordinates.first][unvisitedNeighborCoordinates.second]
                 = 'C'; //update current position
 
-            //call print to visualize?
             print();
+            std::cout << std::endl;
             std::system("pause");
-            std::system("cls");
+            // std::system("cls");
 
             //update the stack of directions
             stackOfCoordinates.push(unvisitedNeighborCoordinates);
@@ -108,6 +120,8 @@ void Maze::solveMaze()
         else //no suitable neighbor found - dead end
         {
             stackOfCoordinates.pop(); //"backtrack"
+            mazeData[unvisitedNeighborCoordinates.first][unvisitedNeighborCoordinates.second]
+                = '_';
         }
     }//end while
 
@@ -169,21 +183,21 @@ std::pair<int, int> Maze::findAnUnvisitedNeighbor(const std::pair<int, int> &cur
 
     if (isInBounds(up)) //only check neighbor's contents if in bounds!
     {
-        if (!isAWallOrHasBeenVisited(up))
+        if (isAWallOrHasBeenVisited(up) == false)
         {
             return up;
         }
     }
     if (isInBounds(down))
     {
-        if (!isAWallOrHasBeenVisited(down))
+        if (isAWallOrHasBeenVisited(down) == false)
         {
             return down;
         }
     }
     if (isInBounds(left))
     {
-        if (!isAWallOrHasBeenVisited(left))
+        if (isAWallOrHasBeenVisited(left) == false)
         {
             return left;
         }
@@ -191,7 +205,7 @@ std::pair<int, int> Maze::findAnUnvisitedNeighbor(const std::pair<int, int> &cur
 
     if (isInBounds(right))
     {
-        if (!isAWallOrHasBeenVisited(right))
+        if (isAWallOrHasBeenVisited(right) == false)
         {
             return right;
         }
@@ -218,9 +232,11 @@ bool Maze::isInBounds(const std::pair<int, int> &position) const
 
 bool Maze::isAWallOrHasBeenVisited(const std::pair<int, int> &position) const
 {
-    if (mazeData[position.first][position.second] != 'W'
+    char mazeValueAtPosition = mazeData[position.first][position.second];
+
+    if (mazeValueAtPosition != 'W'
         &&
-        mazeData[position.first][position.second] != 'V')
+        mazeValueAtPosition != 'V')
     {
         return false;
     }
