@@ -47,14 +47,19 @@ void Maze::print() const
         }
         std::cout << std::endl;//move to the next row in the maze
     }
+
+    std::cout << std::endl;
 }
 
 void Maze::solveMaze()
 {
+    bool mazeSolved = false;
+
     //step 1 from pseudocode for solving maze screenshot
     std::stack<std::pair<int, int>> stackOfCoordinates;
 
     std::pair<int, int> startingCoordinates = {0, 0};
+    //hardcoded to 0, 0 (be wary of this)
     stackOfCoordinates.push(startingCoordinates);
 
     //step 2 (mark start pos. as visited)
@@ -66,7 +71,6 @@ void Maze::solveMaze()
         NUMBER_OF_ROWS - 1, NUMBER_OF_COLUMNS - 1
     };
 
-
     //step 3
     while (!stackOfCoordinates.empty())
     {
@@ -75,15 +79,42 @@ void Maze::solveMaze()
         if (currentCoordinates == goalCoordinates) //step 3b
         {
             std::cout << std::endl << "Solved the maze" << std::endl;
-            break;
+            mazeSolved = true;
+            break; //exit the while loop
         }
 
-        std::pair<int, int> unvisitedNeighborCoordinates = findAnUnvisitedNeighbor(currentCoordinates);
+        std::pair<int, int> unvisitedNeighborCoordinates
+            = findAnUnvisitedNeighbor(currentCoordinates);
 
+        //auto thing = std::pair<int, int>(-1, -1);
 
+        if (unvisitedNeighborCoordinates != std::pair<int, int>(-1, -1)) //constructor for pair that makes {-1, -1}
+        {
+            mazeData[unvisitedNeighborCoordinates.first][unvisitedNeighborCoordinates.second]
+                = 'C'; //update current position
+
+            //call print to visualize?
+            print();
+            std::system("pause");
+            std::system("cls");
+
+            //update the stack of directions
+            stackOfCoordinates.push(unvisitedNeighborCoordinates);
+
+            mazeData[unvisitedNeighborCoordinates.first][unvisitedNeighborCoordinates.second]
+                 = 'V'; //mark as visited
+        }
+
+        else //no suitable neighbor found - dead end
+        {
+            stackOfCoordinates.pop(); //"backtrack"
+        }
+    }//end while
+
+    if (!mazeSolved)
+    {
+        std::cout << "No solution was possible" << std::endl;
     }
-    
-
 }
 
 void Maze::randomlyFillMazeWithWalls()
@@ -128,5 +159,71 @@ void Maze::resetTextColor() const
 
 std::pair<int, int> Maze::findAnUnvisitedNeighbor(const std::pair<int, int> &currentPosition)
 {
+    //where to look first? up, down, left, or right?
+    //just go in up, down, left, right order (arbitrarily)
 
+    std::pair<int, int> up = {currentPosition.first - 1, currentPosition.second};
+    std::pair<int, int> down = {currentPosition.first + 1, currentPosition.second};
+    std::pair<int, int> left = {currentPosition.first, currentPosition.second - 1};
+    std::pair<int, int> right = {currentPosition.first, currentPosition.second + 1};
+
+    if (isInBounds(up)) //only check neighbor's contents if in bounds!
+    {
+        if (!isAWallOrHasBeenVisited(up))
+        {
+            return up;
+        }
+    }
+    if (isInBounds(down))
+    {
+        if (!isAWallOrHasBeenVisited(down))
+        {
+            return down;
+        }
+    }
+    if (isInBounds(left))
+    {
+        if (!isAWallOrHasBeenVisited(left))
+        {
+            return left;
+        }
+    }
+
+    if (isInBounds(right))
+    {
+        if (!isAWallOrHasBeenVisited(right))
+        {
+            return right;
+        }
+    }
+
+    return {-1, -1}; //no neighbor found
+    //(dead end has been reached - up, down, left, right all contain walls or have already been visited)
+}
+
+bool Maze::isInBounds(const std::pair<int, int> &position) const
+{
+    if (position.first < 0 || position.first > NUMBER_OF_ROWS - 1)
+    {
+        return false;
+    }
+
+    if (position.second < 0 || position.second > NUMBER_OF_COLUMNS - 1)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Maze::isAWallOrHasBeenVisited(const std::pair<int, int> &position) const
+{
+    if (mazeData[position.first][position.second] != 'W'
+        &&
+        mazeData[position.first][position.second] != 'V')
+    {
+        return false;
+    }
+
+    return true;
 }

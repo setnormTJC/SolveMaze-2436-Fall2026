@@ -5,8 +5,8 @@
 
 int main()
 {
-    std::cout << "\033[31m" << "Is this red?" << std::endl; //endl does a "flush" (ANSI code)
-    std::cout << "\033[0m" << "Is this back to the normal color?" << std::endl;
+    // std::cout << "\033[31m" << "Is this red?" << std::endl; //endl does a "flush" (ANSI code)
+    // std::cout << "\033[0m" << "Is this back to the normal color?" << std::endl;
 
 
     // std::vector<std::vector<int>> twoDArray(4, std::vector<int>(4));
@@ -32,7 +32,5 @@ int main()
     }
 
     CloseWindow();
-    //
-    // std::cout << "Hello, World!" << std::endl;
-    // return 0;
+
 }
