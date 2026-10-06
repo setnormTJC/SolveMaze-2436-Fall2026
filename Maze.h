@@ -39,7 +39,7 @@ private:
     void fillUpTheEmptySpots();
 
     void makeTextRed() const; //const because this method won't modify the state of the maze
-    void resetTextColor() const;
+    void makeTextDefaultColor() const;
 
     ///@brief returns the coordinates of the (first-encountered) neighbor<br>
     ///returns {-1, -1} if an unvisited, "nonwall" neighbor does NOT exist

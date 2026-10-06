@@ -16,18 +16,19 @@ Maze::Maze()
         mazeData.at(i).resize(NUMBER_OF_ROWS);
     }
 
-    //randomlyFillMazeWithWalls(); //here I come to save the day! (Mighty Mouse)
+    randomlyFillMazeWithWalls();
+
     //hard-coded walls so that we're looking at the same maze during testing
-    mazeData[0][2] = 'W';
-    mazeData[0][6] = 'W';
-    mazeData[0][8] = 'W';
-    mazeData[1][9] = 'W';
-    mazeData[1][2] = 'W';
-    mazeData[1][5] = 'W';
-    mazeData[4][4] = 'W';
-    mazeData[4][5] = 'W';
-    mazeData[5][6] = 'W';
-    mazeData[7][8] = 'W';
+    // mazeData[0][2] = 'W';
+    // mazeData[0][6] = 'W';
+    // mazeData[0][8] = 'W';
+    // mazeData[1][9] = 'W';
+    // mazeData[1][2] = 'W';
+    // mazeData[1][5] = 'W';
+    // mazeData[4][4] = 'W';
+    // mazeData[4][5] = 'W';
+    // mazeData[5][6] = 'W';
+    // mazeData[7][8] = 'W';
 
     //put START position at top left:
     mazeData[0][0] = 'S'; //in mazeData[x][y], is x the row and y the column? Or vice versa?
@@ -51,7 +52,7 @@ void Maze::print() const
 
             else
             {
-                resetTextColor();
+                makeTextDefaultColor();
             }
 
             std::cout << character << " "; //setwidth might be "mandatory" for making the maze "pretty
@@ -106,7 +107,7 @@ void Maze::solveMaze()
                 = 'C'; //update current position
 
             print();
-            std::cout << std::endl;
+            // std::cout << std::endl;
             std::system("pause");
             // std::system("cls");
 
@@ -119,15 +120,34 @@ void Maze::solveMaze()
 
         else //no suitable neighbor found - dead end
         {
+            makeTextRed();
+            std::cout << "DEAD END HIT - BACKTRACKING (popping the stack of directions)" << std::endl;
+            makeTextDefaultColor();
+
             stackOfCoordinates.pop(); //"backtrack"
-            mazeData[unvisitedNeighborCoordinates.first][unvisitedNeighborCoordinates.second]
-                = '_';
+
+            //mark the dead end as visited so we don't revisit it
+            mazeData[currentCoordinates.first][currentCoordinates.second] = 'V';
+
+            //mark the current position based on the updated top of the stack:
+            mazeData[stackOfCoordinates.top().first][stackOfCoordinates.top().second] = 'C';
+
+            print();
+
+
+            // mazeData[unvisitedNeighborCoordinates.first][unvisitedNeighborCoordinates.second]
+            //     = '_';
         }
     }//end while
 
     if (!mazeSolved)
     {
         std::cout << "No solution was possible" << std::endl;
+    }
+
+    else
+    {
+        std::cout << "Maze solved" << std::endl;
     }
 }
 
@@ -166,7 +186,7 @@ void Maze::makeTextRed() const
     std::cout << "\033[31m";
 }
 
-void Maze::resetTextColor() const
+void Maze::makeTextDefaultColor() const
 {
     std::cout << "\033[0m";
 }
